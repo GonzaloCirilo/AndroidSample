@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.gcirilo.androidsample.ui.fragments.UsersViewModel" />
+
+        <variable
+            name="adapter"
+            type="com.gcirilo.androidsample.ui.adapter.UserAdapter" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.fragments.UsersFragment">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/searchInputLayout"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/small_100"
+            android:layout_marginHorizontal="@dimen/normal_100"
+            android:hint="@string/search_user_label"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/filterEditText"
+                android:backgroundTint="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@={viewModel.query}"
+                android:inputType="text"
+                android:imeOptions="actionDone">
+
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/loadingIndicator"
+            android:elevation="@dimen/normal_100"
+            app:layout_constraintTop_toBottomOf="@id/searchInputLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:indeterminate="true"
+            android:layout_margin="@dimen/small_100"
+            android:backgroundTint="@color/colorPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/usersRecyclerView"
+            app:layout_constraintTop_toBottomOf="@+id/searchInputLayout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:setAdapter="@{adapter}"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+        </androidx.recyclerview.widget.RecyclerView>
+        <TextView
+            android:id="@+id/emptyView"
+            app:layout_constraintTop_toBottomOf="@+id/searchInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/large_100"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            android:gravity="center"
+            android:text="@string/empty_list_string" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

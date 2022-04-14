@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/usersFragment">
+
+    <fragment
+        android:id="@+id/usersFragment"
+        android:name="com.gcirilo.androidsample.ui.fragments.UsersFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/users_fragment" >
+        <action
+            android:id="@+id/action_usersFragment_to_userPostsFragment"
+            app:destination="@id/userPostsFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out">
+            <argument
+                android:name="id"
+                app:argType="long"/>
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/userPostsFragment"
+        android:name="com.gcirilo.androidsample.ui.fragments.UserPostsFragment"
+        android:label="@string/user_posts_fragment_label" />
+</navigation>
