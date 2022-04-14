@@ -14,10 +14,11 @@
             android:id="@+id/action_usersFragment_to_userPostsFragment"
             app:destination="@id/userPostsFragment"
             app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out">
+            app:exitAnim="@android:anim/fade_out"
+            app:popExitAnim="@android:anim/fade_out">
             <argument
                 android:name="id"
-                app:argType="long"/>
+                app:argType="long" />
         </action>
     </fragment>
     <fragment
