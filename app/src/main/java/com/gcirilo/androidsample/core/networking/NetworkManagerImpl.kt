@@ -6,9 +6,12 @@ import com.android.volley.NetworkError
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -67,14 +70,14 @@ class NetworkManagerImpl @Inject constructor(
 
 
     override fun <T>get(relURL: String, clazz: Class<T>): Flow<NetworkResponse<T>> {
-        return flow {
+        return flow{
             val res = performJSONRequest(
                 method = Request.Method.GET,
                 relURL = relURL,
                 clazz = clazz
             )
             emit(res)
-        }
+        }.flowOn(Dispatchers.IO)
     }
 
     companion object {

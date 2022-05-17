@@ -5,13 +5,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.gcirilo.androidsample.R
 import com.gcirilo.androidsample.databinding.UserPostsFragmentBinding
 import com.gcirilo.androidsample.ui.adapter.PostAdapter
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class UserPostsFragment : Fragment() {
@@ -27,6 +32,7 @@ class UserPostsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.user_posts_fragment, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
         binding.adapter = adapter
         return binding.root
@@ -35,24 +41,22 @@ class UserPostsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.user.observe(viewLifecycleOwner) {
-            binding.user = it
-            binding.executePendingBindings()
-        }
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                launch {
+                    viewModel.posts.collect{
+                        adapter.posts = it.toTypedArray()
+                    }
+                }
+                launch{
+                    viewModel.errorMessage.collect { error ->
+                        context?.also {
+                            Snackbar.make(it, view, error, Snackbar.LENGTH_LONG).show()
+                        }
 
-        viewModel.posts.observe(viewLifecycleOwner) {
-            adapter.posts = it.toTypedArray()
-        }
-
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading->
-            binding.loadingIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
-        }
-
-        viewModel.errorMessage.observe(viewLifecycleOwner) {
-            if(!it.isNullOrEmpty())
-                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
-
-
 }
